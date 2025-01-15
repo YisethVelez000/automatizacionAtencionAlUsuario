@@ -71,6 +71,7 @@ public class listarCasos {
         esperar(200);
         estadoSolicitud();
         esperar(200);
+        origen();
     }
 
     private void numeroSolicitud() {
@@ -212,8 +213,34 @@ public class listarCasos {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         driver.findElement(By.id("frmCasos:tablaRegistros:j_idt99")).click();
         esperar(2000);
-        int index = (int) (Math.random() * 7) + 0;
-        List<WebElement> estados = driver.findElements(By.cssSelector("ui-selectcheckboxmenu-item.ui-selectcheckboxmenu-list-item.ui-corner-all.ui-selectcheckboxmenu-checked"));
-        estados.getFirst().click();
+        int cantidad = (int) (Math.random() * 5) + 1;
+        List<WebElement> elementosLi = driver.findElements(By.cssSelector("div#frmCasos\\:tablaRegistros\\:j_idt99_panel ul.ui-selectcheckboxmenu-items li.ui-selectcheckboxmenu-item"));
+        for (int i = 0; i < cantidad; i++) {
+            int index = (int) (Math.random() * elementosLi.size());
+            elementosLi.get(index).click();
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+        }
+
+        WebElement primerElemento = driver.findElement(By.cssSelector("div.ui-chkbox.ui-widget"));
+        primerElemento.click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+    }
+
+    private void origen(){
+        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10));
+        driver.findElement(By.id("frmCasos:tablaRegistros:j_idt103")).click();
+        esperar(3000);
+        int cantidad = (int) (Math.random() * 5) + 1;
+        List<WebElement> elementosLi = driver.findElements(By.cssSelector("div#frmCasos\\:tablaRegistros\\:j_idt103_panel ul.ui-selectcheckboxmenu-items li.ui-selectcheckboxmenu-item"));
+        for (int i = 0; i < cantidad; i++) {
+            int index = (int) (Math.random() * elementosLi.size());
+            elementosLi.get(index).click();
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+        }
+        esperar(2000);
+        WebElement primerElemento = driver.findElement(By.className("ui-chkbox-box"));
+        primerElemento.click();
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
     }
 }

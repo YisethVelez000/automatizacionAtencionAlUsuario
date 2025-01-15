@@ -14,7 +14,7 @@ public class ingresoPruebas {
     public void iniciarSesion(){
         driver.get("http://10.250.3.66:8080/savia/login.faces");
         // Cuando uso dos pantallas
-        driver.manage().window().setPosition(new Point(1600,0));
+        driver.manage().window().setPosition(new Point(-1600,0));
         esperar(500);
         driver.manage().window().maximize();
         esperar(500);
