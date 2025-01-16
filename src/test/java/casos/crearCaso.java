@@ -63,6 +63,9 @@ public class crearCaso {
         caso();
         esperar(200);
         //agregarAdjuntoCaso();
+        driver.findElement(By.id("frmCrear:pCasoCrear_toggler")).click();
+        esperar(500);
+        seguimiento();
 
     }
 
@@ -242,5 +245,15 @@ public class crearCaso {
         esperar(3500);
         driver.findElement(By.cssSelector("button.ui-fileupload-upload.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-icon-left")).click();
     }
+
+    private void seguimiento(){
+        driver.findElement(By.id("frmCrear:estadoSeguimiento")).click();
+        driver.findElement(By.id("frmCrear:estadoSeguimiento_1")).click();
+        esperar(500);
+        driver.findElement(By.id("frmCrear:observacionSeg")).sendKeys("Seguimiento de prueba automatizado");
+
+    }
+
+
 
 }
