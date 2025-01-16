@@ -10,6 +10,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.awt.event.WindowAdapter;
+import java.lang.ref.PhantomReference;
 import java.sql.Connection;
 import java.time.Duration;
 import java.util.List;
@@ -72,6 +74,14 @@ public class listarCasos {
         estadoSolicitud();
         esperar(200);
         origen();
+        esperar(200);
+        riesgoDeVida();
+        esperar(200);
+        responsable();
+        esperar(200);
+        responsableCasoCerrado();
+        esperar(200);
+        fechaHoraResponsable();
     }
 
     private void numeroSolicitud() {
@@ -236,11 +246,82 @@ public class listarCasos {
             int index = (int) (Math.random() * elementosLi.size());
             elementosLi.get(index).click();
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+            elementosLi.get(index).click();
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
         }
-        esperar(2000);
-        WebElement primerElemento = driver.findElement(By.className("ui-chkbox-box"));
-        primerElemento.click();
 
+
+    }
+
+    private void riesgoDeVida(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        driver.findElement(By.id("frmCasos:tablaRegistros:j_idt107")).click();
+        esperar(2000);
+        int cantidad = (int) (Math.random() * 5) + 1;
+        List<WebElement> elementosLi = driver.findElements(By.cssSelector("div#frmCasos\\:tablaRegistros\\:j_idt107_panel ul.ui-selectcheckboxmenu-items li.ui-selectcheckboxmenu-item"));
+        for (int i = 0; i < cantidad; i++) {
+            int index = (int) (Math.random() * elementosLi.size());
+            elementosLi.get(index).click();
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+            elementosLi.get(index).click();
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+        }
+
+    }
+
+    private void responsable(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        String query= "SELECT c.gn_usuarios_responsable_id, p.nombre  FROM aus_casos c JOIN gn_usuarios p ON c.gn_usuarios_responsable_id = p.id ORDER BY RAND() LIMIT 1 \n";
+        String responsable = "";
+        try {
+            java.sql.Statement st = conexion.createStatement();
+            java.sql.ResultSet resultSet = st.executeQuery(query);
+            while (resultSet.next()) {
+                responsable = resultSet.getString("nombre");
+                System.out.println("Responsable: " + responsable);
+            }
+        } catch (Exception e) {
+            System.err.println("Error al consultar la base de datos: " + e.getMessage());
+        }
+
+        driver.findElement(By.id("frmCasos:tablaRegistros:j_idt111")).sendKeys(responsable);
+        driver.findElement(By.id("frmCasos:j_idt57")).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+        esperar(2000);
+        driver.findElement(By.id("frmCasos:tablaRegistros:j_idt111")).clear();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+    }
+
+    private void responsableCasoCerrado(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        String query= "SELECT c.gn_usuarios_responsable_id, p.nombre  FROM aus_casos c JOIN gn_usuarios p ON c.gn_usuarios_responsable_id = p.id ORDER BY RAND() LIMIT 1 \n";
+        String responsable = "";
+        try {
+            java.sql.Statement st = conexion.createStatement();
+            java.sql.ResultSet resultSet = st.executeQuery(query);
+            while (resultSet.next()) {
+                responsable = resultSet.getString("nombre");
+                System.out.println("Responsable: " + responsable);
+            }
+        } catch (Exception e) {
+            System.err.println("Error al consultar la base de datos: " + e.getMessage());
+        }
+
+        driver.findElement(By.id("frmCasos:tablaRegistros:j_idt114")).sendKeys(responsable);
+        driver.findElement(By.id("frmCasos:j_idt57")).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+        esperar(2000);
+        driver.findElement(By.id("frmCasos:tablaRegistros:j_idt114")).clear();
+    }
+
+    private void fechaHoraResponsable(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+        driver.findElement(By.id("frmCasos:tablaRegistros:j_idt116")).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+        esperar(2000);
+        driver.findElement(By.id("frmCasos:tablaRegistros:j_idt116")).click();
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
     }
 }
