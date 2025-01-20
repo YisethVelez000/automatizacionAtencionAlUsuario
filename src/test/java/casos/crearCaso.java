@@ -4,15 +4,14 @@ import conexion.Conexion_BD;
 import conexion.ingresoPruebas;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.sql.Connection;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.List;
 
 public class crearCaso {
@@ -63,9 +62,12 @@ public class crearCaso {
         caso();
         esperar(200);
         //agregarAdjuntoCaso();
+        servicio();
         driver.findElement(By.id("frmCrear:pCasoCrear_toggler")).click();
         esperar(500);
         seguimiento();
+        esperar(500);
+        driver.findElement(By.cssSelector("#frmCrear\\:j_idt692")).click();
 
     }
 
@@ -108,11 +110,14 @@ public class crearCaso {
                     continuar = false;
                 }
             }
-            if (index > TiposDocumento.size()) {
+            if (index >= TiposDocumento.size()) {
                 continuar = false;
             }
             index = index + 1;
         } while (continuar);
+        if (index == 15) {
+            index = 14;
+        }
         System.out.println(index);
         driver.findElement(By.id("frmCrear:tipoDocumento")).click();
         esperar(500);
@@ -150,7 +155,7 @@ public class crearCaso {
     private void caso() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         driver.findElement(By.id("frmCrear:tipoOrigen")).click();
-        int index = (int) (Math.random() * 7) + 1;
+        int index = (int) (Math.random() * 5) + 1;
 
         driver.findElement(By.id("frmCrear:tipoOrigen_" + index)).click();
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
@@ -169,7 +174,7 @@ public class crearCaso {
         esperar(500);
 
         driver.findElement(By.id("frmCrear:entrecontrol")).click();
-        index = (int) (Math.random() * 13) + 1;
+        index = (int) (Math.random() * 5) + 1;
         driver.findElement(By.id("frmCrear:entrecontrol_" + index)).click();
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
         esperar(500);
@@ -233,20 +238,17 @@ public class crearCaso {
         driver.findElement(By.id("frmCrear:redireccionado_" + index)).click();
 
 
-
-
-
     }
 
     private void agregarAdjuntoCaso() {
-        File uploadFile = new File("C:\\Users\\apuertav\\Downloads\\Contratacion_Prestadores_2-1_20230405140945909.pdf");
+        File uploadFile = new File("C:\\Users\\apuertav\\Downloads\\Carta- MBV 516  Alinson Yiset Puerta Velez.pdf");
         WebElement uploadElement = driver.findElement(By.id("frmCrear:tablaAnexosCasos:inptAnexo_input"));
         uploadElement.sendKeys(uploadFile.getAbsolutePath());
         esperar(3500);
-        driver.findElement(By.cssSelector("button.ui-fileupload-upload.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-icon-left")).click();
+        driver.findElement(By.className("ui-fileupload-upload")).click();
     }
 
-    private void seguimiento(){
+    private void seguimiento() {
         driver.findElement(By.id("frmCrear:estadoSeguimiento")).click();
         driver.findElement(By.id("frmCrear:estadoSeguimiento_1")).click();
         esperar(500);
@@ -254,6 +256,158 @@ public class crearCaso {
 
     }
 
+    private void servicio() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        driver.findElement(By.id("frmCrear:tablaServicios:j_idt646")).click();
 
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        driver.findElement(By.id("frmCrearServicio:estadoCrear")).click();
+
+        int index = (int) (Math.random() * 4) + 1;
+        driver.findElement(By.id("frmCrearServicio:estadoCrear_" + index)).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        driver.findElement(By.id("frmCrearServicio:ambitoCrear")).click();
+        int index1 = (int) (Math.random() * 4) + 1;
+        driver.findElement(By.id("frmCrearServicio:ambitoCrear_" + index)).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        if (index1 == 1 ) {
+            driver.findElement(By.id("frmCrearServicio:j_idt1095")).click();
+            index = (int) (Math.random() * 2) + 1;
+            driver.findElement(By.id("frmCrearServicio:tipoAdministrativo_" + index)).click();
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+        }
+        if (index != 3) {
+            index = (int) (Math.random() * 2) + 1;
+
+            if (index == 1) {
+                driver.findElement(By.id("frmCrearServicio:btnAplicaProcedimiento")).click();
+                wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+            }
+
+            driver.findElement(By.id("frmCrearServicio:btnEspecialidad")).click();
+            String query = "SELECT codigo  FROM ma_especialidades me ORDER BY RAND() LIMIT 1 ";
+            String codigo = "";
+            try {
+                java.sql.Statement st = conexion.createStatement();
+                java.sql.ResultSet resultSet = st.executeQuery(query);
+                while (resultSet.next()) {
+                    codigo = resultSet.getString("codigo");
+                }
+                System.out.println("consulta exitosa");
+            } catch (Exception e) {
+                System.err.println("Error al consultar la base de datos: " + e.getMessage());
+            }
+
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+            driver.findElement(By.id("frmEspecialidadBusqueda:tablaRegistrosEspecialidades:j_idt2469")).sendKeys(codigo);
+            driver.findElement(By.id("frmEspecialidadBusqueda:j_idt2466")).click();
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+            driver.findElement(By.cssSelector("tbody#frmEspecialidadBusqueda\\:tablaRegistrosEspecialidades_data")).click();
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+            driver.findElement(By.id("frmCrearServicio:btnCiex")).click();
+
+            query = "SELECT ma_diagnostico_codigo  FROM auc_diagnosticos ad ORDER BY RAND() LIMIT 1 ";
+            codigo = "";
+
+            try {
+                java.sql.Statement st = conexion.createStatement();
+                java.sql.ResultSet resultSet = st.executeQuery(query);
+                while (resultSet.next()) {
+                    codigo = resultSet.getString("ma_diagnostico_codigo");
+                }
+                System.out.println("consulta exitosa");
+            } catch (Exception e) {
+                System.err.println("Error al consultar la base de datos: " + e.getMessage());
+            }
+
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+            driver.findElement(By.id("frmDiagnosticoBusqueda:tablaRegistrosDiagnoticos:j_idt2456")).sendKeys(codigo);
+            driver.findElement(By.id("frmDiagnosticoBusqueda:j_idt2447")).click();
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+            driver.findElement(By.cssSelector("tbody#frmDiagnosticoBusqueda\\:tablaRegistrosDiagnoticos_data")).click();
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        }
+
+
+        driver.findElement(By.id("frmCrearServicio:aplicaMedicamento")).click();
+        index = (int) (Math.random() * 2) + 1;
+        driver.findElement(By.id("frmCrearServicio:aplicaMedicamento_" + index)).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        if (index == 2) {
+            driver.findElement(By.id("frmCrearServicio:aplicaMedicamentoCobertura")).click();
+            index = (int) (Math.random() * 2) + 1;
+            driver.findElement(By.id("frmCrearServicio:aplicaMedicamentoCobertura_" + index)).click();
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+        }
+
+        LocalDate fecha = LocalDate.now();
+        int semana = (int) (Math.random() * 15) + 1;
+        fecha.minusWeeks(semana);
+        driver.findElement(By.id("frmCrearServicio:fechacumplimientoCrear_input")).sendKeys(String.valueOf(fecha));
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+        driver.findElement(By.id("frmCrearServicio:descripcionCrear")).sendKeys("Servicio de prueba automatizado");
+        driver.findElement(By.id("frmCrearServicio:j_idt1121")).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        driver.findElement(By.cssSelector("#frmCrearServicio\\:patologiaCrear")).click();
+        List<WebElement> patologias = driver.findElements(By.cssSelector("#frmCrearServicio\\:patologiaCrear_items li"));
+        index = (int) (Math.random() * patologias.size()) + 0;
+        //Nos desplazamos a la patologia seleccionada
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView();", patologias.get(index));
+        patologias.get(index).click();
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+        index = (int) (Math.random() * 3) + 1;
+        driver.findElement(By.cssSelector("#frmCrearServicio\\:servicioAtribuidoIPS")).click();
+        driver.findElement(By.cssSelector("#frmCrearServicio\\:servicioAtribuidoIPS_" + index)).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        driver.findElement(By.id("frmCrearServicio:btnservicioDestino")).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        String query = "SELECT numero_documento from cnt_prestadores cp ORDER BY RAND() LIMIT 1 ";
+        String numeroDocumento = "";
+        try {
+            java.sql.Statement st = conexion.createStatement();
+            java.sql.ResultSet resultSet = st.executeQuery(query);
+            while (resultSet.next()) {
+                numeroDocumento = resultSet.getString("numero_documento");
+            }
+            System.out.println("consulta exitosa");
+        } catch (Exception e) {
+            System.err.println("Error al consultar la base de datos: " + e.getMessage());
+        }
+
+        driver.findElement(By.cssSelector("#frmPrestadorIpsDestino\\:tablaRegistrosIpsDestino\\:j_idt2218")).click();
+        driver.findElement(By.cssSelector("#frmPrestadorIpsDestino\\:tablaRegistrosIpsDestino\\:j_idt2218")).sendKeys(numeroDocumento);
+        driver.findElement(By.cssSelector("#frmPrestadorIpsDestino\\:tablaRegistrosIpsDestino_paginator_top")).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        driver.findElement(By.cssSelector("#frmPrestadorIpsDestino\\:tablaRegistrosIpsDestino_data")).click();
+
+        fecha = LocalDate.now();
+        driver.findElement(By.cssSelector("#frmCrearServicio\\:fechaInicioVigenciaCrear_input")).sendKeys(String.valueOf(fecha));
+        driver.findElement(By.cssSelector("#frmCrearServicio\\:pCrearServicioTecnologias_header")).click();
+
+        semana = (int) (Math.random() * 15) + 1;
+        fecha.plusWeeks(semana);
+        driver.findElement(By.cssSelector("#frmCrearServicio\\:fechaFinVigenciaCrear_input")).sendKeys(String.valueOf(fecha));
+
+        driver.findElement(By.cssSelector("#frmCrearServicio\\:pCrearServicioTecnologias_header")).click();
+
+        driver.findElement(By.cssSelector("#frmCrearServicio\\:j_idt1212")).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+    }
 
 }
