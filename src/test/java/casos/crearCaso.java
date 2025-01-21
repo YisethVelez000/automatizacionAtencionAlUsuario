@@ -65,7 +65,10 @@ public class crearCaso {
         driver.findElement(By.cssSelector("#frmCrear\\:pCasoCrear_toggler")).click();
         esperar(100);
         servicio();
-
+        esperar(100);
+        seguimiento();
+        esperar(100);
+        driver.findElement(By.cssSelector("#frmCrear\\:j_idt692")).click();
 
     }
 
@@ -734,5 +737,40 @@ public class crearCaso {
         //Usamos JavaScriptExecutor para hacer clic en el botón de subir archivo
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(By.cssSelector("#frmCrearServicio\\:tablaAnexosServicios\\:anexo4 > div.ui-fileupload-buttonbar.ui-widget-header.ui-corner-top > button.ui-fileupload-cancel.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-icon-left")));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+    }
+
+    private void seguimiento(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        driver.findElement(By.cssSelector("#frmCrear\\:estadoSeguimiento")).click();
+        esperar(200);
+        List<WebElement> estados = driver.findElements(By.cssSelector("#frmCrear\\:estadoSeguimiento_items > li"));
+        int indexEstado = (int) (Math.random() * estados.size());
+        if (indexEstado == 0) {
+            indexEstado = 1;
+        }
+        System.out.println("Estado: " + estados.get(indexEstado).getText());
+        estados.get(indexEstado).click();
+
+        driver.findElement(By.cssSelector("#frmCrear\\:observacionSeg")).sendKeys("Observacion de prueba automatizada");
+
+        adjuntosSeguimiento();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+    }
+
+    private void adjuntosSeguimiento(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        File uploadFile = new File("C:\\Users\\apuertav\\Downloads\\Contratacion_Prestadores_2-1_20230405140945909.pdf");
+        WebElement adjunto =  driver.findElement(By.cssSelector("#frmCrear\\:tablaAnexosSeguimiento\\:inptAnexo_input"));
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", adjunto);
+
+        adjunto.sendKeys(uploadFile.getAbsolutePath());
+        esperar(4000);
+
+        driver.findElement(By.cssSelector("#frmCrear\\:tablaAnexosSeguimiento\\:inptAnexo > div.ui-fileupload-buttonbar.ui-widget-header.ui-corner-top > button.ui-fileupload-upload.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-icon-left")).click();
+
     }
 }
