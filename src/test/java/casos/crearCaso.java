@@ -602,35 +602,35 @@ public class crearCaso {
                 wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
                 esperar(500);
 
-                driver.findElement(By.cssSelector("#frmCrearServicio\\:btnEspecialidad")).click();
-
-                wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-                String query = "SELECT codigo  FROM ma_especialidades WHERE activo = \"1\" ORDER BY  RAND() LIMIT 1 ";
-                String codigo = "";
-
-                try {
-                    java.sql.Statement st = conexion.createStatement();
-                    java.sql.ResultSet resultSet = st.executeQuery(query);
-                    while (resultSet.next()) {
-                        codigo = resultSet.getString("codigo");
-                    }
-                } catch (Exception e) {
-                    System.err.println("Error al obtener los datos de la persona: " + e.getMessage());
-                }
-
-                driver.findElement(By.cssSelector("#frmEspecialidadBusqueda\\:tablaRegistrosEspecialidades\\:j_idt2469")).sendKeys(codigo);
-
-                driver.findElement(By.cssSelector("#frmEspecialidadBusqueda\\:j_idt2466")).click();
-                wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-                List<WebElement> especialidades = driver.findElements(By.cssSelector("#frmEspecialidadBusqueda\\:tablaRegistrosEspecialidades_data > tr"));
-                int indexEspecialidad = (int) (Math.random() * especialidades.size());
-                System.out.println("Especialidad: " + especialidades.get(indexEspecialidad).getText());
-                especialidades.get(indexEspecialidad).click();
 
             }
         }
+        driver.findElement(By.cssSelector("#frmCrearServicio\\:btnEspecialidad")).click();
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        String query = "SELECT codigo  FROM ma_especialidades WHERE activo = \"1\" ORDER BY  RAND() LIMIT 1 ";
+        String codigo = "";
+
+        try {
+            java.sql.Statement st = conexion.createStatement();
+            java.sql.ResultSet resultSet = st.executeQuery(query);
+            while (resultSet.next()) {
+                codigo = resultSet.getString("codigo");
+            }
+        } catch (Exception e) {
+            System.err.println("Error al obtener los datos de la persona: " + e.getMessage());
+        }
+
+        driver.findElement(By.cssSelector("#frmEspecialidadBusqueda\\:tablaRegistrosEspecialidades\\:j_idt2469")).sendKeys(codigo);
+
+        driver.findElement(By.cssSelector("#frmEspecialidadBusqueda\\:j_idt2466")).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        List<WebElement> especialidades = driver.findElements(By.cssSelector("#frmEspecialidadBusqueda\\:tablaRegistrosEspecialidades_data > tr"));
+        int indexEspecialidad = (int) (Math.random() * especialidades.size());
+        System.out.println("Especialidad: " + especialidades.get(indexEspecialidad).getText());
+        especialidades.get(indexEspecialidad).click();
 
         driver.findElement(By.cssSelector("#frmCrearServicio\\:fechacumplimientoCrear_input")).click();
         esperar(200);
@@ -644,8 +644,8 @@ public class crearCaso {
         driver.findElement(By.cssSelector("#frmCrearServicio\\:btnCiex")).click();
 
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-        String query = "SELECT codigo  FROM ma_diagnosticos md WHERE activo = \"1\" ORDER BY RAND() LIMIT 1";
-        String codigo = "";
+         query = "SELECT codigo  FROM ma_diagnosticos md WHERE activo = \"1\" ORDER BY RAND() LIMIT 1";
+         codigo = "";
 
         try {
             java.sql.Statement st = conexion.createStatement();
@@ -714,7 +714,25 @@ public class crearCaso {
         int indexDiaFin = (int) (int) (Math.random() * diasFin.size());
         diasFin.get(indexDiaFin).click();
 
+        adjuntosServicios();
 
+        driver.findElement(By.cssSelector("#frmCrearServicio\\:j_idt1212")).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+    }
 
+    private void adjuntosServicios(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        File uploadFile = new File("C:\\Users\\apuertav\\Downloads\\Contratacion_Prestadores_2-1_20230405140945909.pdf");
+        WebElement adjunto =  driver.findElement(By.cssSelector("#frmCrearServicio\\:tablaAnexosServicios\\:anexo4_input"));
+
+        //Usamos javaScriptExecutor y enviamos la ruta del archivo
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", adjunto);
+        adjunto.sendKeys(uploadFile.getAbsolutePath());
+        esperar(4000);
+
+        //Usamos JavaScriptExecutor para hacer clic en el botón de subir archivo
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(By.cssSelector("#frmCrearServicio\\:tablaAnexosServicios\\:anexo4 > div.ui-fileupload-buttonbar.ui-widget-header.ui-corner-top > button.ui-fileupload-cancel.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-icon-left")));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
     }
 }
