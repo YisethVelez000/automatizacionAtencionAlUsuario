@@ -58,178 +58,87 @@ public class crearCaso {
         driver.findElement(By.id("frmCasos:j_idt57")).click();
         esperar(500);
         persona();
-        esperar(100);
+        esperar(500);
         agregarContacto();
-        esperar(100);
+        esperar(500);
         caso();
-        driver.findElement(By.cssSelector("#frmCrear\\:pCasoCrear_toggler")).click();
-        esperar(100);
+        esperar(500);
         servicio();
-        esperar(100);
-        seguimiento();
-        esperar(100);
-        driver.findElement(By.cssSelector("#frmCrear\\:j_idt692")).click();
 
     }
 
-    private void persona() {
+    private void persona(){
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        String query = "SELECT\n" +
-                "mae_tipo_documento_valor ,\n" +
-                "numero_documento,\n" +
-                "mae_genero_codigo \n" +
-                "FROM aseg_afiliados ORDER BY RAND() LIMIT 1 ";
+
+        String query = "SELECT mae_tipo_documento_valor, numero_documento, mae_genero_codigo FROM aseg_afiliados ORDER BY RAND() LIMIT 1";
         String tipoDocumento = "";
         String numeroDocumento = "";
         String genero = "";
+
         try {
             java.sql.Statement st = conexion.createStatement();
-            java.sql.ResultSet resultSet = st.executeQuery(query);
-            while (resultSet.next()) {
-                tipoDocumento = resultSet.getString("mae_tipo_documento_valor");
-                numeroDocumento = resultSet.getString("numero_documento");
-                genero = resultSet.getString("mae_genero_codigo");
+            java.sql.ResultSet rs = st.executeQuery(query);
+            while (rs.next()) {
+                tipoDocumento = rs.getString("mae_tipo_documento_valor");
+                numeroDocumento = rs.getString("numero_documento");
+                genero = rs.getString("mae_genero_codigo");
             }
-        } catch (Exception e) {
+        }catch (Exception e){
             System.err.println("Error al obtener los datos de la persona: " + e.getMessage());
         }
 
         driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento")).click();
 
-        if (tipoDocumento.equals("Registro Civil")) {
-            // Usamos javaScriptExecutor para desplazarnos hasta el elemento
+        List<String> tiposDocumento = List.of("Adulto sin Identificacion", "Carné Diplomático", "Cedula Ciudadania", "Certificado de nacido vivo", "Cédula Extranjería", "Menor sin Identificación", "NIT", "Nuip","Pasaporte", "Permiso Especial Permanencia","Permiso por Protección Temporal","Registro Civil","RUT","Salvoconducto","Tarjeta Identidad");
 
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_12")));
+        driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento")).click();
 
-            // Usamos javaScriptExecutor para hacer clic en el elemento
+        esperar(500);
 
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_12")));
+        System.out.println("Tipo de documento : " + tipoDocumento);
 
-        } else if (tipoDocumento.equals("Cedula Ciudadania")) {
-            // Usamos javaScriptExecutor para desplazarnos hasta el elemento
+        System.out.println("Tipo de documento tamaño : " + tiposDocumento.size());
+        for (int i = 0; i < tiposDocumento.size(); i++) {
+            System.out.println("Tipo de documento : " + tiposDocumento.get(i));
+            if (tiposDocumento.get(i).equals(tipoDocumento)) {
+                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_" + (i + 1) )));
 
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_3")));
-
-            // Usamos javaScriptExecutor para hacer clic en el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_3")));
-
-        } else if (tipoDocumento.equals("Adulto sin Identificacion")) {
-            // Usamos javaScriptExecutor para desplazarnos hasta el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_1")));
-
-            // Usamos javaScriptExecutor para hacer clic en el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_1")));
-
-        } else if (tipoDocumento.equals("Tarjeta Identidad")) {
-            // Usamos javaScriptExecutor para desplazarnos hasta el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_15")));
-
-            // Usamos javaScriptExecutor para hacer clic en el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_15")));
-
-        } else if (tipoDocumento.equals("Cédula Extranjería")) {
-            // Usamos javaScriptExecutor para desplazarnos hasta el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_5")));
-
-            // Usamos javaScriptExecutor para hacer clic en el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_5")));
-
-        } else if (tipoDocumento.equals("Menor sin Identificación")) {
-            // Usamos javaScriptExecutor para desplazarnos hasta el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_6")));
-
-            // Usamos javaScriptExecutor para hacer clic en el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_6")));
-
-        } else if (tipoDocumento.equals("Certificado de nacido vivo")) {
-            // Usamos javaScriptExecutor para desplazarnos hasta el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_4")));
-
-            // Usamos javaScriptExecutor para hacer clic en el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_4")));
-
-        } else if (tipoDocumento.equals("Permiso Especial Permanencia")) {
-            // Usamos javaScriptExecutor para desplazarnos hasta el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_10")));
-
-            // Usamos javaScriptExecutor para hacer clic en el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_10")));
-
-        } else if (tipoDocumento.equals("Pasaporte")) {
-            // Usamos javaScriptExecutor para desplazarnos hasta el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_12")));
-
-            // Usamos javaScriptExecutor para hacer clic en el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_12")));
-
-        } else if (tipoDocumento.equals("Permiso por Protección Temporal")) {
-            // Usamos javaScriptExecutor para desplazarnos hasta el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_11")));
-
-            // Usamos javaScriptExecutor para hacer clic en el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_11")));
-
-        } else if (tipoDocumento.equals("Nuip")) {
-            // Usamos javaScriptExecutor para desplazarnos hasta el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_8")));
-
-            // Usamos javaScriptExecutor para hacer clic en el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_8")));
-
-        } else if (tipoDocumento.equals("Salvoconducto")) {
-            // Usamos javaScriptExecutor para desplazarnos hasta el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_13")));
-
-            // Usamos javaScriptExecutor para hacer clic en el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_13")));
-
-        } else if (tipoDocumento.equals("NIT")) {
-            // Usamos javaScriptExecutor para desplazarnos hasta el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_9")));
-
-            // Usamos javaScriptExecutor para hacer clic en el elemento
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_9")));
-
+                driver.findElement(By.cssSelector("#frmCrear\\:tipoDocumento_" + (i+1) )).click();
+                break;
+            }
         }
 
-        driver.findElement(By.cssSelector("#frmCrear\\:documento")).sendKeys(numeroDocumento);
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
 
-        esperar(3000);
+        esperar(500);
+
+        driver.findElement(By.cssSelector("#frmCrear\\:documento")).click();
+        driver.findElement(By.cssSelector("#frmCrear\\:documento")).sendKeys(numeroDocumento);
+
+        esperar(200);
+
+        driver.findElement(By.cssSelector("#frmCrear\\:panelPersonaCrear_content > div:nth-child(2) > div:nth-child(3)")).click();
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
         driver.findElement(By.cssSelector("#frmCrear\\:sexo")).click();
+
+        esperar(200);
 
         if (genero.equals("M")) {
             driver.findElement(By.cssSelector("#frmCrear\\:sexo_2")).click();
+
+            driver.findElement(By.cssSelector("#frmCrear\\:gestante")).click();
+
+            esperar(200);
+
+            driver.findElement(By.cssSelector("#frmCrear\\:gestante_1")).click();
+
         } else if (genero.equals("F")) {
             driver.findElement(By.cssSelector("#frmCrear\\:sexo_1")).click();
         } else {
             driver.findElement(By.cssSelector("#frmCrear\\:sexo_3")).click();
         }
-
-        driver.findElement(By.cssSelector("#frmCrear\\:pnlPrograma_toggler")).click();
     }
 
     private void agregarContacto() {
@@ -327,9 +236,9 @@ public class crearCaso {
         }
         System.out.println("Entre Control: " + entreControles.get(indexEntreControl).getText());
 
-        //Nos desplazamos hasta el elemento
+
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", entreControles.get(indexEntreControl));
-        //Hacemos clic en el elemento
+
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", entreControles.get(indexEntreControl));
 
         esperar(200);
@@ -357,9 +266,9 @@ public class crearCaso {
             indexUbicacion = 1;
         }
         System.out.println("Ubicacion: " + ubicaciones.get(indexUbicacion).getText());
-        //Nos desplazamos hasta el elemento
+
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", ubicaciones.get(indexUbicacion));
-        //Hacemos clic en el elemento
+
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", ubicaciones.get(indexUbicacion));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
 
@@ -369,9 +278,9 @@ public class crearCaso {
         List<WebElement> sedes = driver.findElements(By.cssSelector("#frmCrear\\:sedes_items > li"));
         int indexSede = (int) (Math.random() * sedes.size());
         System.out.println("Sede: " + sedes.get(indexSede).getText());
-        //Nos desplazamos hasta el elemento
+
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", sedes.get(indexSede));
-        //Hacemos clic en el elemento
+
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", sedes.get(indexSede));
 
         esperar(200);
@@ -383,9 +292,9 @@ public class crearCaso {
             indexTecnologia = 1;
         }
         System.out.println("Tecnologia Alto Costo: " + tecnologias.get(indexTecnologia).getText());
-        //Nos desplazamos hasta el elemento
+
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", tecnologias.get(indexTecnologia));
-        //Hacemos clic en el elemento
+
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", tecnologias.get(indexTecnologia));
 
         esperar(200);
@@ -397,19 +306,13 @@ public class crearCaso {
             indexMotivo = 1;
         }
         System.out.println("Motivo: " + motivos.get(indexMotivo).getText());
-        //Nos desplazamos hasta el elemento
+
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", motivos.get(indexMotivo));
-        //Hacemos clic en el elemento
+
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", motivos.get(indexMotivo));
 
 
-        WebElement tipoMotivo = driver.findElement(By.cssSelector("#frmCrear\\:tipoMotivo"));
-        String clase = tipoMotivo.getAttribute("class");
-        System.out.println("Clase: " + clase);
-        String activo = "ui-selectonemenu ui-widget ui-state-default ui-corner-all ui-state-disabled ";
-        clase = tipoMotivo.getAttribute("class");
-        System.out.println("Clase: " + clase);
-        if (!Objects.equals(clase, activo)) {
+        if (indexMotivo != 38) {
             System.out.println("hay tipo de motivo");
             esperar(200);
             driver.findElement(By.cssSelector("#frmCrear\\:tipoMotivo")).click();
@@ -421,21 +324,18 @@ public class crearCaso {
             }
             if (tiposMotivo.size() > 1) {
                 System.out.println("Tipo Motivo: " + tiposMotivo.get(indexTipoMotivo).getText());
-                //Nos desplazamos hasta el elemento
+
                 ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", tiposMotivo.get(indexTipoMotivo));
-                //Hacemos clic en el elemento
-                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", tiposMotivo.get(indexTipoMotivo));
+                tiposMotivo.get(indexTipoMotivo).click();
+                esperar(200);
             }
         } else {
             System.out.println("No hay tipo de motivo");
         }
 
-        WebElement subMotivo = driver.findElement(By.cssSelector("#frmCrear\\:subtipoMotivo"));
-        String claseSubMotivo = subMotivo.getAttribute("class");
-        System.out.println("Clase: " + claseSubMotivo);
-        String activoSubMotivo = "ui-selectonemenu ui-widget ui-state-default ui-corner-all ";
-        if (Objects.equals(claseSubMotivo, activoSubMotivo)) {
+        if (indexMotivo != 38 ) {
             System.out.println("hay sub motivo");
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmCrear\\:subtipoMotivo")));
             esperar(200);
             driver.findElement(By.cssSelector("#frmCrear\\:subtipoMotivo")).click();
             esperar(200);
@@ -446,9 +346,9 @@ public class crearCaso {
                     indexSubMotivo = 1;
                 }
                 System.out.println("Sub Motivo: " + subMotivos.get(indexSubMotivo).getText());
-                //Nos desplazamos hasta el elemento
+
                 ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", subMotivos.get(indexSubMotivo));
-                //Hacemos clic en el elemento
+
                 ((JavascriptExecutor) driver).executeScript("arguments[0].click();", subMotivos.get(indexSubMotivo));
             }
         } else {
@@ -461,8 +361,10 @@ public class crearCaso {
         System.out.println("Pluripatologico: " + indexPluripatologico);
         if (indexPluripatologico == 0) {
             driver.findElement(By.cssSelector("#frmCrear\\:usuarioPluripatologico_1")).click();
+            esperar(200);
         } else {
             driver.findElement(By.cssSelector("#frmCrear\\:usuarioPluripatologico_2")).click();
+            esperar(200);
         }
 
         driver.findElement(By.cssSelector("#frmCrear\\:proteccionDatos")).click();
@@ -471,8 +373,10 @@ public class crearCaso {
         System.out.println("Proteccion Datos: " + indexProteccionDatos);
         if (indexProteccionDatos == 0) {
             driver.findElement(By.cssSelector("#frmCrear\\:proteccionDatos_1")).click();
+            esperar(200);
         } else {
             driver.findElement(By.cssSelector("#frmCrear\\:proteccionDatos_2")).click();
+            esperar(200);
         }
 
         driver.findElement(By.cssSelector("#frmCrear\\:instruccion")).click();
@@ -481,8 +385,10 @@ public class crearCaso {
         System.out.println("Instruccion: " + indexInstruccion);
         if (indexInstruccion == 0) {
             driver.findElement(By.cssSelector("#frmCrear\\:instruccion_1")).click();
+            esperar(200);
         } else {
             driver.findElement(By.cssSelector("#frmCrear\\:instruccion_2")).click();
+            esperar(200);
         }
 
         driver.findElement(By.cssSelector("#frmCrear\\:reabierto")).click();
@@ -491,8 +397,10 @@ public class crearCaso {
         System.out.println("Reabierto: " + indexReabierto);
         if (indexReabierto == 0) {
             driver.findElement(By.cssSelector("#frmCrear\\:reabierto_1")).click();
+            esperar(200);
         } else {
             driver.findElement(By.cssSelector("#frmCrear\\:reabierto_2")).click();
+            esperar(200);
         }
 
         driver.findElement(By.cssSelector("#frmCrear\\:falloTutela")).click();
@@ -501,8 +409,10 @@ public class crearCaso {
         System.out.println("Fallo Tutela: " + indexFalloTutela);
         if (indexFalloTutela == 0) {
             driver.findElement(By.cssSelector("#frmCrear\\:falloTutela_1")).click();
+            esperar(200);
         } else {
             driver.findElement(By.cssSelector("#frmCrear\\:falloTutela_2")).click();
+            esperar(200);
         }
 
         driver.findElement(By.cssSelector("#frmCrear\\:redireccionado")).click();
@@ -511,8 +421,10 @@ public class crearCaso {
         System.out.println("Redireccionado: " + indexRedireccionado);
         if (indexRedireccionado == 0) {
             driver.findElement(By.cssSelector("#frmCrear\\:redireccionado_1")).click();
+            esperar(200);
         } else {
             driver.findElement(By.cssSelector("#frmCrear\\:redireccionado_2")).click();
+            esperar(200);
         }
 
         agregarAdjuntoCaso();
@@ -540,19 +452,29 @@ public class crearCaso {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
         driver.findElement(By.cssSelector("#frmCrear\\:tablaServicios\\:j_idt646")).click();
+
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
 
         driver.findElement(By.cssSelector("#frmCrearServicio\\:estadoCrear")).click();
+
         esperar(200);
+
         List<WebElement> estados = driver.findElements(By.cssSelector("#frmCrearServicio\\:estadoCrear_items > li"));
+
         int indexEstado = (int) (Math.random() * estados.size());
+
         if (indexEstado == 0) {
             indexEstado = 1;
         }
-        System.out.println("Estado: " + estados.get(indexEstado).getText());
-        estados.get(indexEstado).click();
 
-        esperar(1000);
+        System.out.println("Estado: " + estados.get(indexEstado).getText());
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", estados.get(indexEstado));
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", estados.get(indexEstado));
+
+        esperar(200);
+
         driver.findElement(By.cssSelector("#frmCrearServicio\\:ambitoCrear")).click();
         esperar(200);
         List<WebElement> ambitos = driver.findElements(By.cssSelector("#frmCrearServicio\\:ambitoCrear_items > li"));
@@ -566,108 +488,136 @@ public class crearCaso {
 
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
 
+        int indexTipoAdministrativo = (int) (Math.random() * 2);
+
         if (indexAmbito == 1 && indexEstado!= 2){
 
             driver.findElement(By.cssSelector("#frmCrearServicio\\:tipoAdministrativo")).click();
-            int indexTipoAdministrativo = (int) (Math.random() * 2);
             System.out.println("Tipo Administrativo: " + indexTipoAdministrativo);
             if (indexTipoAdministrativo == 0) {
                 indexTipoAdministrativo = 1;
             }
             if (indexTipoAdministrativo == 1) {
                 driver.findElement(By.cssSelector("#frmCrearServicio\\:tipoAdministrativo_1")).click();
+                esperar(200);
+                wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
             } else {
+                esperar(200);
                 driver.findElement(By.cssSelector("#frmCrearServicio\\:tipoAdministrativo_2")).click();
+                wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
             }
 
         }
 
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:aplicaMedicamento")).click();
         int indexAplicaMedicamento = (int) (Math.random() * 2);
-        System.out.println("Aplica Medicamento: " + indexAplicaMedicamento);
-        if (indexAplicaMedicamento ==0){
-            indexAplicaMedicamento = 1;
-        }
-        if (indexAplicaMedicamento == 1) {
+
+        int indexAplicaMedicamentoCobertura = (int) (Math.random() * 2);
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmCrearServicio\\:aplicaMedicamento")));
+        driver.findElement(By.cssSelector("#frmCrearServicio\\:aplicaMedicamento")).click();
+
+        if (indexAplicaMedicamento == 0) {
             driver.findElement(By.cssSelector("#frmCrearServicio\\:aplicaMedicamento_1")).click();
         } else {
             driver.findElement(By.cssSelector("#frmCrearServicio\\:aplicaMedicamento_2")).click();
-            esperar(900);
-            driver.findElement(By.cssSelector("#frmCrearServicio\\:aplicaMedicamentoCobertura")).click();
+            esperar(200);
+
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-        }
 
-        if (indexEstado!=3 && indexAmbito!= 1){
-            int index = (int) (Math.random() * 2);
-            for (int i = 0; i < index; i++) {
-                driver.findElement(By.cssSelector("#frmCrearServicio\\:btnAplicaProcedimiento")).click();
-                wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-                esperar(500);
-
-
+            if (indexAplicaMedicamentoCobertura == 0) {
+                driver.findElement(By.cssSelector("#frmCrearServicio\\:aplicaMedicamentoCobertura")).click();
+                esperar(200);
+                driver.findElement(By.cssSelector("#frmCrearServicio\\:aplicaMedicamentoCobertura_1")).click();
+            } else {
+                driver.findElement(By.cssSelector("#frmCrearServicio\\:aplicaMedicamentoCobertura")).click();
+                esperar(200);
+                driver.findElement(By.cssSelector("#frmCrearServicio\\:aplicaMedicamentoCobertura_2")).click();
             }
         }
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:btnEspecialidad")).click();
 
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+        int indexAplicaProcedimiento = (int) (Math.random() * 2);
 
-        String query = "SELECT codigo  FROM ma_especialidades WHERE activo = \"1\" ORDER BY  RAND() LIMIT 1 ";
-        String codigo = "";
+
+        String query = "SELECT codigo  FROM ma_especialidades WHERE activo = \"1\" ORDER BY  RAND() LIMIT 1 \n";
+        String codigoEspecialidad = "";
+
+        if (indexAmbito !=1 && indexEstado !=3 && indexTipoAdministrativo !=1 ) {
+            System.out.println("Habilitados");
+            if (indexAplicaProcedimiento == 0){
+                System.out.println("Aplica procedimiento");
+                driver.findElement(By.cssSelector("#frmCrearServicio\\:btnAplicaProcedimiento")).click();
+            }else{
+                System.out.println("No aplica procedimiento");
+                driver.findElement(By.cssSelector("#frmCrearServicio\\:btnAplicaProcedimiento")).click();
+            }
+
+            try {
+                java.sql.Statement st = conexion.createStatement();
+                java.sql.ResultSet resultSet = st.executeQuery(query);
+                while (resultSet.next()) {
+                    codigoEspecialidad = resultSet.getString("codigo");
+                    System.out.println("Codigo Especialidad: " + codigoEspecialidad);
+                }
+            } catch (Exception e) {
+                System.err.println("Error al obtener los datos de la persona: " + e.getMessage());
+            }
+
+            driver.findElement(By.cssSelector("#frmCrearServicio\\:btnEspecialidad")).click();
+
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+            driver.findElement(By.cssSelector("#frmEspecialidadBusqueda\\:tablaRegistrosEspecialidades\\:j_idt2469")).click();
+            driver.findElement(By.cssSelector("#frmEspecialidadBusqueda\\:tablaRegistrosEspecialidades\\:j_idt2469")).sendKeys(codigoEspecialidad);
+
+            driver.findElement(By.cssSelector("#frmEspecialidadBusqueda\\:j_idt2466")).click();
+
+            esperar(200);
+
+            List<WebElement> especialidades = driver.findElements(By.cssSelector("#frmEspecialidadBusqueda\\:tablaRegistrosEspecialidades_data > tr"));
+
+            int indexEspecialidad = (int) (Math.random() * especialidades.size());
+
+            especialidades.get(indexEspecialidad).click();
+
+        }
+
+        LocalDate fechaCumplimiento = LocalDate.now().plusDays(30);
+
+        driver.findElement(By.cssSelector("#frmCrearServicio\\:fechacumplimientoCrear_input")).click();
+        driver.findElement(By.cssSelector("#frmCrearServicio\\:fechacumplimientoCrear_input")).sendKeys(fechaCumplimiento.toString());
+
+        driver.findElement(By.cssSelector("#frmCrearServicio\\:descripcionCrear")).click();
+        driver.findElement(By.cssSelector("#frmCrearServicio\\:descripcionCrear")).sendKeys("Servicio de prueba automatizada");
+
+        query = "SELECT codigo  FROM ma_diagnosticos md WHERE activo = \"1\" ORDER BY RAND() LIMIT 1 \n";
+        String codigoDiagnostico = "";
 
         try {
             java.sql.Statement st = conexion.createStatement();
             java.sql.ResultSet resultSet = st.executeQuery(query);
             while (resultSet.next()) {
-                codigo = resultSet.getString("codigo");
+                codigoDiagnostico = resultSet.getString("codigo");
+                System.out.println("Codigo Diagnostico: " + codigoDiagnostico);
             }
         } catch (Exception e) {
             System.err.println("Error al obtener los datos de la persona: " + e.getMessage());
         }
-
-        driver.findElement(By.cssSelector("#frmEspecialidadBusqueda\\:tablaRegistrosEspecialidades\\:j_idt2469")).sendKeys(codigo);
-
-        driver.findElement(By.cssSelector("#frmEspecialidadBusqueda\\:j_idt2466")).click();
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-        List<WebElement> especialidades = driver.findElements(By.cssSelector("#frmEspecialidadBusqueda\\:tablaRegistrosEspecialidades_data > tr"));
-        int indexEspecialidad = (int) (Math.random() * especialidades.size());
-        System.out.println("Especialidad: " + especialidades.get(indexEspecialidad).getText());
-        especialidades.get(indexEspecialidad).click();
-
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:fechacumplimientoCrear_input")).click();
-        esperar(200);
-        List<WebElement> dias = driver.findElements(By.cssSelector("#ui-datepicker-div > table > tbody > tr:nth-child(4) > td.ui-datepicker-today > a"));
-        int indexDia = (int) (Math.random() * dias.size());
-        dias.get(indexDia).click();
-
-
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:descripcionCrear")).sendKeys("Descripcion de prueba automatizada");
 
         driver.findElement(By.cssSelector("#frmCrearServicio\\:btnCiex")).click();
 
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-         query = "SELECT codigo  FROM ma_diagnosticos md WHERE activo = \"1\" ORDER BY RAND() LIMIT 1";
-         codigo = "";
 
-        try {
-            java.sql.Statement st = conexion.createStatement();
-            java.sql.ResultSet resultSet = st.executeQuery(query);
-            while (resultSet.next()) {
-                codigo = resultSet.getString("codigo");
-            }
-        } catch (Exception e) {
-            System.err.println("Error al obtener los datos de la persona: " + e.getMessage());
-        }
-
-        driver.findElement(By.cssSelector("#frmDiagnosticoBusqueda\\:tablaRegistrosDiagnoticos\\:j_idt2456")).sendKeys(codigo);
+        driver.findElement(By.cssSelector("#frmDiagnosticoBusqueda\\:tablaRegistrosDiagnoticos\\:j_idt2456")).click();
+        driver.findElement(By.cssSelector("#frmDiagnosticoBusqueda\\:tablaRegistrosDiagnoticos\\:j_idt2456")).sendKeys(codigoDiagnostico);
 
         driver.findElement(By.cssSelector("#frmDiagnosticoBusqueda\\:j_idt2447")).click();
+
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
 
         List<WebElement> diagnosticos = driver.findElements(By.cssSelector("#frmDiagnosticoBusqueda\\:tablaRegistrosDiagnoticos_data > tr"));
+
         int indexDiagnostico = (int) (Math.random() * diagnosticos.size());
-        System.out.println("Diagnostico: " + diagnosticos.get(indexDiagnostico).getText());
+
         diagnosticos.get(indexDiagnostico).click();
 
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
@@ -675,102 +625,17 @@ public class crearCaso {
         driver.findElement(By.cssSelector("#frmCrearServicio\\:patologiaCrear")).click();
         esperar(200);
         List<WebElement> patologias = driver.findElements(By.cssSelector("#frmCrearServicio\\:patologiaCrear_items > li"));
+
         int indexPatologia = (int) (Math.random() * patologias.size());
         if (indexPatologia == 0) {
             indexPatologia = 1;
         }
-        if (patologias.size() > 1) {
-            System.out.println("Patologia: " + patologias.get(indexPatologia).getText());
-            patologias.get(indexPatologia).click();
-        }
 
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:servicioAtribuidoIPS")).click();
-        esperar(200);
-        List<WebElement> servicios = driver.findElements(By.cssSelector("#frmCrearServicio\\:servicioAtribuidoIPS_items > li"));
-        int indexServicio = (int) (Math.random() * servicios.size());
-        if (indexServicio == 0) {
-            indexServicio = 1;
-        }
+        System.out.println("Patologia: " + patologias.get(indexPatologia).getText());
 
-        if (indexServicio > 1) {
-            System.out.println("Servicio: " + servicios.get(indexServicio).getText());
-            servicios.get(indexServicio).click();
-        }
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", patologias.get(indexPatologia));
 
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:btnservicioDestino")).click();
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-        List<WebElement> sedes = driver.findElements(By.cssSelector("#frmPrestadorIpsDestino\\:tablaRegistrosIpsDestino_data > tr"));
-        int indexSede = (int) (Math.random() * sedes.size());
-        System.out.println("Sede: " + sedes.get(indexSede).getText());
-        sedes.get(indexSede).click();
-
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:fechaInicioVigenciaCrear_input")).click();
-        esperar(200);
-        List<WebElement> diasInicio = driver.findElements(By.cssSelector("#ui-datepicker-div > table > tbody > tr:nth-child(4) > td.ui-datepicker-today > a"));
-        int indexDiaInicio = (int) (Math.random() * diasInicio.size());
-        diasInicio.get(indexDiaInicio).click();
-
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:fechaFinVigenciaCrear_input")).click();
-        esperar(200);
-        List<WebElement> diasFin = driver.findElements(By.cssSelector("#ui-datepicker-div > table > tbody > tr:nth-child(4) > td.ui-datepicker-today > a"));
-        int indexDiaFin = (int) (int) (Math.random() * diasFin.size());
-        diasFin.get(indexDiaFin).click();
-
-        adjuntosServicios();
-
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:j_idt1212")).click();
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+        patologias.get(indexPatologia).click();
     }
 
-    private void adjuntosServicios(){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-        File uploadFile = new File("C:\\Users\\apuertav\\Downloads\\Contratacion_Prestadores_2-1_20230405140945909.pdf");
-        WebElement adjunto =  driver.findElement(By.cssSelector("#frmCrearServicio\\:tablaAnexosServicios\\:anexo4_input"));
-
-        //Usamos javaScriptExecutor y enviamos la ruta del archivo
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", adjunto);
-        adjunto.sendKeys(uploadFile.getAbsolutePath());
-        esperar(4000);
-
-        //Usamos JavaScriptExecutor para hacer clic en el botón de subir archivo
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(By.cssSelector("#frmCrearServicio\\:tablaAnexosServicios\\:anexo4 > div.ui-fileupload-buttonbar.ui-widget-header.ui-corner-top > button.ui-fileupload-cancel.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-icon-left")));
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-    }
-
-    private void seguimiento(){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-        driver.findElement(By.cssSelector("#frmCrear\\:estadoSeguimiento")).click();
-        esperar(200);
-        List<WebElement> estados = driver.findElements(By.cssSelector("#frmCrear\\:estadoSeguimiento_items > li"));
-        int indexEstado = (int) (Math.random() * estados.size());
-        if (indexEstado == 0) {
-            indexEstado = 1;
-        }
-        System.out.println("Estado: " + estados.get(indexEstado).getText());
-        estados.get(indexEstado).click();
-
-        driver.findElement(By.cssSelector("#frmCrear\\:observacionSeg")).sendKeys("Observacion de prueba automatizada");
-
-        adjuntosSeguimiento();
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-    }
-
-    private void adjuntosSeguimiento(){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-        File uploadFile = new File("C:\\Users\\apuertav\\Downloads\\Contratacion_Prestadores_2-1_20230405140945909.pdf");
-        WebElement adjunto =  driver.findElement(By.cssSelector("#frmCrear\\:tablaAnexosSeguimiento\\:inptAnexo_input"));
-
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", adjunto);
-
-        adjunto.sendKeys(uploadFile.getAbsolutePath());
-        esperar(4000);
-
-        driver.findElement(By.cssSelector("#frmCrear\\:tablaAnexosSeguimiento\\:inptAnexo > div.ui-fileupload-buttonbar.ui-widget-header.ui-corner-top > button.ui-fileupload-upload.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-icon-left")).click();
-
-    }
 }

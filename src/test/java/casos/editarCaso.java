@@ -63,6 +63,11 @@ public class editarCaso {
         ingreso.iniciarSesion();
         driver.get("http://10.250.3.66:8080/savia/atencionusuario/casos.faces");
         esperar(100);
+        esperar(200);
+        driver.findElement(By.cssSelector("#frmCasos\\:tablaRegistros\\:j_idt99")).click();
+        esperar(200);
+        driver.findElement(By.cssSelector("#frmCasos\\:tablaRegistros\\:j_idt99_panel > div.ui-selectcheckboxmenu-items-wrapper > ul > li:nth-child(1) > label")).click();
+        esperar(200);
         seleccionarCaso();
         esperar(100);
         persona();
@@ -82,6 +87,8 @@ public class editarCaso {
     private void seleccionarCaso() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
         int indexCaso = (int) (Math.random() * 29) + 1;
 
         WebElement caso = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#frmCasos\\:tablaRegistros\\:" + indexCaso + "\\:j_idt62")));
@@ -93,9 +100,10 @@ public class editarCaso {
 
     private void persona() {
         String documento = driver.findElement(By.cssSelector("#frmEditar\\:documento")).getAttribute("value");
-        String query = "SELECT discapacidad, usuario_gestante FROM aseg_afiliados aa WHERE numero_documento = '" + documento + "'";
+        String query = "SELECT discapacidad, usuario_gestante, mae_estado_afiliacion_valor FROM aseg_afiliados aa WHERE numero_documento = '" + documento + "'";
         String discapacidad = "";
         String gestante = "";
+        String estadoAfiliacion = "";
 
         try {
             java.sql.Statement st = conexion.createStatement();
@@ -103,7 +111,8 @@ public class editarCaso {
             while (resultSet.next()) {
                 discapacidad = resultSet.getString("discapacidad");
                 gestante = resultSet.getString("usuario_gestante");
-                System.out.println("Discapacidad: " + discapacidad + " Gestante: " + gestante);
+                estadoAfiliacion = resultSet.getString("mae_estado_afiliacion_valor");
+                System.out.println("Discapacidad: " + discapacidad + " Gestante: " + gestante+ " Estado afiliación: " + estadoAfiliacion);
             }
         } catch (Exception e) {
             System.out.println("Error al consultar la base de datos: " + e.getMessage());
@@ -161,7 +170,7 @@ public class editarCaso {
 
         String query = "SELECT telefono_movil\n" +
                 "FROM aseg_afiliados\n" +
-                "WHERE telefono_movil IS NOT NULL AND telefono_movil <> ''";
+                "WHERE telefono_movil IS NOT NULL";
 
         String telefono = "";
 

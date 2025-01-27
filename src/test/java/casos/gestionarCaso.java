@@ -58,6 +58,11 @@ public class gestionarCaso {
         ingreso.iniciarSesion();
         esperar(200);
         driver.get("http://10.250.3.66:8080/savia/atencionusuario/casos.faces");
+        esperar(200);
+        driver.findElement(By.cssSelector("#frmCasos\\:tablaRegistros\\:j_idt99")).click();
+        esperar(200);
+        driver.findElement(By.cssSelector("#frmCasos\\:tablaRegistros\\:j_idt99_panel > div.ui-selectcheckboxmenu-items-wrapper > ul > li:nth-child(1) > label")).click();
+        esperar(200);
         seleccionarGesion();
         esperar(100);
         caso();
@@ -65,13 +70,16 @@ public class gestionarCaso {
         servicio();
         esperar(100);
         seguimiento();
-
+        esperar(100);
+        //descargarAdjuntoCaso();
         driver.findElement(By.cssSelector("#frmGestion\\:j_idt2157")).click();
 
     }
 
     private void seleccionarGesion() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
 
         int indexCaso = (int) (Math.random() * 29) + 1;
 
@@ -127,8 +135,6 @@ public class gestionarCaso {
         esperar(200);
 
         driver.findElement(By.cssSelector("#frmGestion\\:protecciónDatos_" + indexProteccionDatos)).click();
-
-        descargarAdjuntoCaso();
     }
 
     private void descargarAdjuntoCaso() {
