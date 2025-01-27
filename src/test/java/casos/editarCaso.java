@@ -66,21 +66,16 @@ public class editarCaso {
         esperar(200);
         driver.findElement(By.cssSelector("#frmCasos\\:tablaRegistros\\:j_idt99")).click();
         esperar(200);
-        driver.findElement(By.cssSelector("#frmCasos\\:tablaRegistros\\:j_idt99_panel > div.ui-selectcheckboxmenu-items-wrapper > ul > li:nth-child(1) > label")).click();
-        esperar(200);
+        driver.findElement(By.cssSelector("#frmCasos\\:tablaRegistros\\:j_idt99_panel > div.ui-selectcheckboxmenu-items-wrapper > ul > li:nth-child(6) > label")).click();
+        esperar(500);
         seleccionarCaso();
-        esperar(100);
+        esperar(200);
         persona();
-        esperar(100);
+        esperar(200);
         agregarTelefono();
-        esperar(100);
+        esperar(200);
         caso();
-        esperar(100);
-        servicio();
-        esperar(100);
-        seguimiento();
-        esperar(100);
-        driver.findElement(By.cssSelector("#frmEditar\\:j_idt1036")).click();
+
 
     }
 
@@ -98,7 +93,7 @@ public class editarCaso {
 
     }
 
-    private void persona() {
+    private void persona(){
         String documento = driver.findElement(By.cssSelector("#frmEditar\\:documento")).getAttribute("value");
         String query = "SELECT discapacidad, usuario_gestante, mae_estado_afiliacion_valor FROM aseg_afiliados aa WHERE numero_documento = '" + documento + "'";
         String discapacidad = "";
@@ -117,7 +112,6 @@ public class editarCaso {
         } catch (Exception e) {
             System.out.println("Error al consultar la base de datos: " + e.getMessage());
         }
-
 
         if (discapacidad != null) {
             if (discapacidad.equals("1")) {
@@ -160,6 +154,8 @@ public class editarCaso {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", estratos.get(indexEstrato));
         estratos.get(indexEstrato).click();
 
+
+
     }
 
     private void agregarTelefono() {
@@ -170,7 +166,7 @@ public class editarCaso {
 
         String query = "SELECT telefono_movil\n" +
                 "FROM aseg_afiliados\n" +
-                "WHERE telefono_movil IS NOT NULL";
+                "WHERE telefono_movil IS NOT NULL AND telefono_movil <> '' ORDER BY RAND() LIMIT 1\n";
 
         String telefono = "";
 
@@ -196,204 +192,262 @@ public class editarCaso {
     private void caso() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         driver.findElement(By.cssSelector("#frmEditar\\:tipoorigen")).click();
+
         esperar(200);
-        List<WebElement> origenes = driver.findElements(By.cssSelector("#frmEditar\\:tipoorigen_items li"));
-        int indexOrigen = (int) (Math.random() * origenes.size());
-
-        if (indexOrigen == 0) {
-            indexOrigen = 1;
+        List<WebElement> origenes = driver.findElements(By.cssSelector("#frmEditar\\:tipoorigen_items > li"));
+        int index = (int) (Math.random() * origenes.size());
+        if (index == 0) {
+            index = 1;
         }
-
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", origenes.get(indexOrigen));
-
-        origenes.get(indexOrigen).click();
-
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+        System.out.println("Origen: " + origenes.get(index).getText());
+        origenes.get(index).click();
         esperar(500);
 
-        driver.findElement(By.cssSelector("#frmEditar\\:tiposolicitud")).click();
-        esperar(500);
-        List<WebElement> solicitudes = driver.findElements(By.cssSelector("#frmEditar\\:tiposolicitud_items li"));
-        esperar(200);
-        int indexSolicitud = (int) (Math.random() * solicitudes.size());
-
-        System.out.println("Index solicitud: " + indexSolicitud);
-        System.out.println("Tamaño de la lista de solicitudes: " + solicitudes.size());
-
-        if (indexSolicitud == 0) {
-            indexSolicitud = 1;
-        }
-
-        solicitudes.get(indexSolicitud).click();
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-        if (indexOrigen == 7) {
-            int numeroRadicado = (int) (Math.random() * 1000000000);
+        if (index == 7) {
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+            esperar(500);
+            int numeroRadicado = (int) (Math.random() * 1000000);
             driver.findElement(By.cssSelector("#frmEditar\\:numeroradicado")).sendKeys(String.valueOf(numeroRadicado));
 
             driver.findElement(By.cssSelector("#frmEditar\\:canalSuperSalud")).click();
-            esperar(200);
-            List<WebElement> canales = driver.findElements(By.cssSelector("#frmEditar\\:canalSuperSalud_items li"));
-            int indexCanal = (int) (Math.random() * canales.size());
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", canales.get(indexCanal));
-            canales.get(indexCanal).click();
+            esperar(500);
+            List<WebElement> canalesSuperSalud = driver.findElements(By.cssSelector("#frmEditar\\:canalSuperSalud_items > li"));
+            int indexCanal = (int) (Math.random() * canalesSuperSalud.size());
+            esperar(500);
+            System.out.println("Canal SuperSalud: " + canalesSuperSalud.get(indexCanal).getText());
+            canalesSuperSalud.get(indexCanal).click();
+            esperar(500);
         }
 
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmEditar\\:prioridad")));
+        driver.findElement(By.cssSelector("#frmEditar\\:tiposolicitud")).click();
+        esperar(200);
+        List<WebElement> tiposSolicitud = driver.findElements(By.cssSelector("#frmEditar\\:tiposolicitud_items > li"));
+        int indexTipoSolicitud = (int) (Math.random() * tiposSolicitud.size());
+        if (indexTipoSolicitud == 0) {
+            indexTipoSolicitud = 1;
+        }
+        System.out.println("Tipo Solicitud: " + tiposSolicitud.get(indexTipoSolicitud).getText());
+        tiposSolicitud.get(indexTipoSolicitud).click();
+
+        esperar(200);
         driver.findElement(By.cssSelector("#frmEditar\\:prioridad")).click();
         esperar(200);
-        List<WebElement> prioridades = driver.findElements(By.cssSelector("#frmEditar\\:prioridad_items li"));
+        List<WebElement> prioridades = driver.findElements(By.cssSelector("#frmEditar\\:prioridad_items > li"));
         int indexPrioridad = (int) (Math.random() * prioridades.size());
-
         if (indexPrioridad == 0) {
             indexPrioridad = 1;
         }
-
-        driver.findElement(By.cssSelector("#frmEditar\\:prioridad")).click();
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", prioridades.get(indexPrioridad));
+        System.out.println("Prioridad: " + prioridades.get(indexPrioridad).getText());
         prioridades.get(indexPrioridad).click();
 
+        esperar(200);
         driver.findElement(By.cssSelector("#frmEditar\\:entrecontrol")).click();
         esperar(200);
-        List<WebElement> entes = driver.findElements(By.cssSelector("#frmEditar\\:entrecontrol_items li"));
-        int indexEnte = (int) (Math.random() * entes.size());
-
-        if (indexEnte == 0) {
-            indexEnte = 1;
+        List<WebElement> entreControles = driver.findElements(By.cssSelector("#frmEditar\\:entrecontrol_items > li"));
+        int indexEntreControl = (int) (Math.random() * entreControles.size());
+        if (indexEntreControl == 0) {
+            indexEntreControl = 1;
         }
+        System.out.println("Entre Control: " + entreControles.get(indexEntreControl).getText());
 
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", entes.get(indexEnte));
-        entes.get(indexEnte).click();
 
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", entreControles.get(indexEntreControl));
 
-        driver.findElement(By.cssSelector("#frmEditar\\:j_idt844")).click();
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", entreControles.get(indexEntreControl));
 
-        int indexPertinencia = (int) (Math.random() * 2) + 1;
-        for (int i = 0; i < indexPertinencia; i++) {
-            driver.findElement(By.cssSelector("#frmEditar\\:pertinenciaCasoEditar")).click();
+        esperar(200);
+        driver.findElement(By.cssSelector("#frmEditar\\:riesgovida")).click();
+        esperar(200);
+        List<WebElement> riesgosVida = driver.findElements(By.cssSelector("#frmEditar\\:riesgovida_items > li"));
+        int indexRiesgoVida = (int) (Math.random() * riesgosVida.size());
+        if (indexRiesgoVida == 0) {
+            indexRiesgoVida = 1;
         }
-
-        LocalDate fechaNotificacion = LocalDate.now();
-        int dia = (int) (Math.random() * 600) + 1;
-        fechaNotificacion = fechaNotificacion.plusDays(dia);
-        System.out.println("Fecha de notificación: " + fechaNotificacion);
-
-        driver.findElement(By.cssSelector("#frmEditar\\:fechanotificacion_input")).clear();
-        driver.findElement(By.cssSelector("#frmEditar\\:fechanotificacion_input")).sendKeys(fechaNotificacion.toString());
-
-        driver.findElement(By.cssSelector("#frmEditar\\:j_idt844")).click();
-
-        driver.findElement(By.cssSelector("#frmEditar\\:fechavencimiento_input")).clear();
-        LocalDate fechaVencimiento = fechaNotificacion.plusDays(30);
-        driver.findElement(By.cssSelector("#frmEditar\\:fechavencimiento_input")).sendKeys(fechaVencimiento.toString());
+        System.out.println("Riesgo Vida: " + riesgosVida.get(indexRiesgoVida).getText());
+        // Nos desplazamos hasta el elemento
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", riesgosVida.get(indexRiesgoVida));
+        // Hacemos clic en el elemento
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", riesgosVida.get(indexRiesgoVida));
 
         driver.findElement(By.cssSelector("#frmEditar\\:ubicacionCaso")).click();
         esperar(200);
-        List<WebElement> ubicaciones = driver.findElements(By.cssSelector("#frmEditar\\:ubicacionCaso_items li"));
+        List<WebElement> ubicaciones = driver.findElements(By.cssSelector("#frmEditar\\:ubicacionCaso_items > li"));
         esperar(200);
         int indexUbicacion = (int) (Math.random() * ubicaciones.size());
-
         if (indexUbicacion == 0) {
             indexUbicacion = 1;
         }
+        System.out.println("Ubicacion: " + ubicaciones.get(indexUbicacion).getText());
 
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", ubicaciones.get(indexUbicacion));
-        ubicaciones.get(indexUbicacion).click();
 
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", ubicaciones.get(indexUbicacion));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        esperar(200);
         driver.findElement(By.cssSelector("#frmEditar\\:sedes")).click();
         esperar(200);
-        List<WebElement> sedes = driver.findElements(By.cssSelector("#frmEditar\\:sedes_items li"));
+        List<WebElement> sedes = driver.findElements(By.cssSelector("#frmEditar\\:sedes_items > li"));
         int indexSede = (int) (Math.random() * sedes.size());
+        System.out.println("Sede: " + sedes.get(indexSede).getText());
 
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", sedes.get(indexSede));
-        sedes.get(indexSede).click();
 
-        driver.findElement(By.cssSelector("#frmEditar\\:j_idt844")).click();
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", sedes.get(indexSede));
 
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+        LocalDate fechaNotificacion = LocalDate.now().plusDays(3);
 
-        driver.findElement(By.cssSelector("#frmEditar\\:responsable_button")).click();
-        esperar(500);
-        List<WebElement> responsables = driver.findElements(By.cssSelector("#frmEditar\\:responsable_panel > ul > li"));
-        int indexResponsable = (int) (Math.random() * responsables.size());
 
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", responsables.get(indexResponsable));
-        responsables.get(indexResponsable).click();
 
-        int indexInstruccion = (int) (Math.random() * 1);
-        driver.findElement(By.cssSelector("#frmEditar\\:instruccion")).click();
         esperar(200);
-        driver.findElement(By.cssSelector("#frmEditar\\:instruccion_"+ indexInstruccion)).click();
-
-        int indexReabierto = (int) (Math.random() * 1);
-        driver.findElement(By.cssSelector("#frmEditar\\:reabierto")).click();
-        esperar(200);
-        driver.findElement(By.cssSelector("#frmEditar\\:reabierto_"+ indexReabierto)).click();
-
-        int indexFalloTutela = (int) (Math.random() * 1);
-        driver.findElement(By.cssSelector("#frmEditar\\:falloTutela")).click();
-        esperar(200);
-        driver.findElement(By.cssSelector("#frmEditar\\:falloTutela_"+ indexFalloTutela)).click();
-
-        int indexRedireccionado = (int) (Math.random() * 1);
-        driver.findElement(By.cssSelector("#frmEditar\\:redireccionado")).click();
-        esperar(200);
-        driver.findElement(By.cssSelector("#frmEditar\\:redireccionado_"+ indexRedireccionado)).click();
-
         driver.findElement(By.cssSelector("#frmEditar\\:tecnologiaAltoCosto")).click();
         esperar(200);
-        List<WebElement> tecnologias = driver.findElements(By.cssSelector("#frmEditar\\:tecnologiaAltoCosto_items li"));
+        List<WebElement> tecnologias = driver.findElements(By.cssSelector("#frmEditar\\:tecnologiaAltoCosto_items > li"));
         int indexTecnologia = (int) (Math.random() * tecnologias.size());
-
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", tecnologias.get(indexTecnologia));
-        tecnologias.get(indexTecnologia).click();
-
-        driver.findElement(By.cssSelector("#frmEditar\\:motivo")).click();
-        esperar(200);
-        List<WebElement> motivos = driver.findElements(By.cssSelector("#frmEditar\\:motivo_items li"));
-        int indexMotivo = (int) (Math.random() * motivos.size());
-
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", motivos.get(indexMotivo));
-        motivos.get(indexMotivo).click();
-
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-        String motivo = driver.findElement(By.cssSelector("#frmEditar\\:motivo_label")).getText();
-
-        System.out.println("Motivo: " + motivo);
-
-        if (motivo != "SIN ESPECIFICAR"){
-            driver.findElement(By.cssSelector("#frmEditar\\:tipoMotivo")).click();
-            esperar(200);
-            List<WebElement> tiposMotivo = driver.findElements(By.cssSelector("#frmEditar\\:tipoMotivo_items li"));
-            int indexTipoMotivo = (int) (Math.random() * tiposMotivo.size());
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", tiposMotivo.get(indexTipoMotivo));
-            tiposMotivo.get(indexTipoMotivo).click();
-
-            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-            driver.findElement(By.cssSelector("#frmEditar\\:subtipoMotivo")).click();
-            esperar(200);
-            List<WebElement> subtiposMotivo = driver.findElements(By.cssSelector("#frmEditar\\:subtipoMotivo_items li"));
-            int indexSubtipoMotivo = (int) (Math.random() * subtiposMotivo.size());
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", subtiposMotivo.get(indexSubtipoMotivo));
-            subtiposMotivo.get(indexSubtipoMotivo).click();
+        if (indexTecnologia == 0) {
+            indexTecnologia = 1;
         }
 
-        int pluripatologico = (int) (Math.random() * 2) + 1;
+        System.out.println("Tecnologia Alto Costo: " + tecnologias.get(indexTecnologia).getText());
+        driver.findElement(By.cssSelector("#frmEditar\\:fechanotificacion_input")).sendKeys(fechaNotificacion.toString());
+
+        LocalDate fechaVencimiento = fechaNotificacion.plusDays(30);
+
+        driver.findElement(By.cssSelector("#frmEditar\\:fechavencimiento_input")).sendKeys(fechaVencimiento.toString());
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", tecnologias.get(indexTecnologia));
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", tecnologias.get(indexTecnologia));
+
+        esperar(200);
+        driver.findElement(By.cssSelector("#frmEditar\\:motivo")).click();
+        esperar(200);
+        List<WebElement> motivos = driver.findElements(By.cssSelector("#frmEditar\\:motivo_items > li"));
+        int indexMotivo = (int) (Math.random() * motivos.size());
+        if (indexMotivo == 0) {
+            indexMotivo = 1;
+        }
+        System.out.println("Motivo: " + motivos.get(indexMotivo).getText());
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", motivos.get(indexMotivo));
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", motivos.get(indexMotivo));
+
+
+        if (indexMotivo != 38) {
+            System.out.println("hay tipo de motivo");
+            esperar(200);
+            driver.findElement(By.cssSelector("#frmEditar\\:tipoMotivo")).click();
+            esperar(200);
+            List<WebElement> tiposMotivo = driver.findElements(By.cssSelector("#frmEditar\\:tipoMotivo_items > li"));
+            int indexTipoMotivo = (int) (Math.random() * tiposMotivo.size());
+            if (indexTipoMotivo == 0) {
+                indexTipoMotivo = 1;
+            }
+            if (tiposMotivo.size() > 1) {
+                System.out.println("Tipo Motivo: " + tiposMotivo.get(indexTipoMotivo).getText());
+
+                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", tiposMotivo.get(indexTipoMotivo));
+                tiposMotivo.get(indexTipoMotivo).click();
+                esperar(200);
+            }
+        } else {
+            System.out.println("No hay tipo de motivo");
+        }
+
+        if (indexMotivo != 38 ) {
+            System.out.println("hay sub motivo");
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmEditar\\:subtipoMotivo")));
+            esperar(200);
+            driver.findElement(By.cssSelector("#frmEditar\\:subtipoMotivo")).click();
+            esperar(200);
+            List<WebElement> subMotivos = driver.findElements(By.cssSelector("#frmEditar\\:subtipoMotivo_items > li"));
+            int indexSubMotivo = (int) (Math.random() * subMotivos.size());
+            if (subMotivos.size() > 1) {
+                if (indexSubMotivo == 0) {
+                    indexSubMotivo = 1;
+                }
+                System.out.println("Sub Motivo: " + subMotivos.get(indexSubMotivo).getText());
+
+                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", subMotivos.get(indexSubMotivo));
+
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", subMotivos.get(indexSubMotivo));
+            }
+        } else {
+            System.out.println("No hay sub motivo");
+        }
+
         driver.findElement(By.cssSelector("#frmEditar\\:usuarioPluripatologico")).click();
         esperar(200);
-        driver.findElement(By.cssSelector("#frmEditar\\:usuarioPluripatologico_" + pluripatologico)).click();
+        int indexPluripatologico = (int) (Math.random() * 2);
+        System.out.println("Pluripatologico: " + indexPluripatologico);
+        if (indexPluripatologico == 0) {
+            driver.findElement(By.cssSelector("#frmEditar\\:usuarioPluripatologico_0")).click();
+            esperar(200);
+        } else {
+            driver.findElement(By.cssSelector("#frmEditar\\:usuarioPluripatologico_1")).click();
+            esperar(200);
+        }
 
-        int proteccionDatos = (int) (Math.random() * 2) + 1;
         driver.findElement(By.cssSelector("#frmEditar\\:proteccionDatos")).click();
         esperar(200);
-        driver.findElement(By.cssSelector("#frmEditar\\:proteccionDatos_" + proteccionDatos)).click();
+        int indexProteccionDatos = (int) (Math.random() * 2);
+        System.out.println("Proteccion Datos: " + indexProteccionDatos);
+        if (indexProteccionDatos == 0) {
+            driver.findElement(By.cssSelector("#frmEditar\\:proteccionDatos_0")).click();
+            esperar(200);
+        } else {
+            driver.findElement(By.cssSelector("#frmEditar\\:proteccionDatos_1")).click();
+            esperar(200);
+        }
+
+        driver.findElement(By.cssSelector("#frmEditar\\:instruccion")).click();
+        esperar(500);
+        int indexInstruccion = (int) (Math.random() * 2);
+        System.out.println("Instruccion: " + indexInstruccion);
+        if (indexInstruccion == 0) {
+            driver.findElement(By.cssSelector("#frmEditar\\:instruccion_0")).click();
+            esperar(200);
+        } else {
+            driver.findElement(By.cssSelector("#frmEditar\\:instruccion_1")).click();
+            esperar(200);
+        }
+
+        driver.findElement(By.cssSelector("#frmEditar\\:reabierto")).click();
+        esperar(200);
+        int indexReabierto = (int) (Math.random() * 2);
+        System.out.println("Reabierto: " + indexReabierto);
+        if (indexReabierto == 0) {
+            driver.findElement(By.cssSelector("#frmEditar\\:reabierto_0")).click();
+            esperar(200);
+        } else {
+            driver.findElement(By.cssSelector("#frmEditar\\:reabierto_1")).click();
+            esperar(200);
+        }
+
+        driver.findElement(By.cssSelector("#frmEditar\\:falloTutela")).click();
+        esperar(200);
+        int indexFalloTutela = (int) (Math.random() * 2);
+        System.out.println("Fallo Tutela: " + indexFalloTutela);
+        if (indexFalloTutela == 0) {
+            driver.findElement(By.cssSelector("#frmEditar\\:falloTutela_0")).click();
+            esperar(200);
+        } else {
+            driver.findElement(By.cssSelector("#frmEditar\\:falloTutela_1")).click();
+            esperar(200);
+        }
+
+        driver.findElement(By.cssSelector("#frmEditar\\:redireccionado")).click();
+        esperar(200);
+        int indexRedireccionado = (int) (Math.random() * 2);
+        System.out.println("Redireccionado: " + indexRedireccionado);
+        if (indexRedireccionado == 0) {
+            driver.findElement(By.cssSelector("#frmEditar\\:redireccionado_0")).click();
+            esperar(200);
+        } else {
+            driver.findElement(By.cssSelector("#frmEditar\\:redireccionado_1")).click();
+            esperar(200);
+        }
 
         agregarAdjuntoCaso();
     }
@@ -416,285 +470,5 @@ public class editarCaso {
 
     }
 
-    private void servicio(){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-        driver.findElement(By.cssSelector("#frmEditar\\:tablaServicios\\:j_idt971")).click();
-
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:estadoCrear")).click();
-        esperar(200);
-        List<WebElement> estados = driver.findElements(By.cssSelector("#frmCrearServicio\\:estadoCrear_items li"));
-        int indexEstado = (int) (Math.random() * estados.size());
-
-        if (indexEstado == 0) {
-            indexEstado = 1;
-        }
-
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", estados.get(indexEstado));
-        estados.get(indexEstado).click();
-
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:ambitoCrear")).click();
-        esperar(200);
-
-        List<WebElement> ambitos = driver.findElements(By.cssSelector("#frmCrearServicio\\:ambitoCrear_items li"));
-        int indexAmbito = (int) (Math.random() * ambitos.size());
-
-        if (indexAmbito == 0) {
-            indexAmbito = 1;
-        }
-
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", ambitos.get(indexAmbito));
-        ambitos.get(indexAmbito).click();
-
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-        int indexTipoAdministrativo = 0;
-        if (indexAmbito == 1 && indexEstado != 2) {
-            driver.findElement(By.cssSelector("#frmCrearServicio\\:tipoAdministrativo")).click();
-            esperar(200);
-
-            List<WebElement> tiposAdministrativos = driver.findElements(By.cssSelector("#frmCrearServicio\\:tipoAdministrativo_items li"));
-            indexTipoAdministrativo = (int) (Math.random() * tiposAdministrativos.size());
-
-            if (indexTipoAdministrativo == 0) {
-                indexTipoAdministrativo = 1;
-            }
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", tiposAdministrativos.get(indexTipoAdministrativo));
-            tiposAdministrativos.get(indexTipoAdministrativo).click();
-
-            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-        }
-        int indexAplicaMedicamento = (int) (Math.random() * 2) + 1;
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:aplicaMedicamento")).click();
-        esperar(200);
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:aplicaMedicamento_" + indexAplicaMedicamento)).click();
-
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-        if ((indexAplicaMedicamento == 2)){
-            int indexMedicamentoCobertura = (int) (Math.random() * 2) + 1;
-            driver.findElement(By.cssSelector("#frmCrearServicio\\:aplicaMedicamentoCobertura")).click();
-            esperar(200);
-
-            driver.findElement(By.cssSelector("#frmCrearServicio\\:aplicaMedicamentoCobertura_" + indexMedicamentoCobertura)).click();
-        }
-
-        int indexAplicaProcedimiento = (int) (Math.random() * 2) + 1;
-
-        for (int i = 0; i < indexAplicaProcedimiento; i++) {
-            driver.findElement(By.cssSelector("#frmCrearServicio\\:btnAplicaProcedimiento")).click();
-        }
-
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-        int indexPatologia = 0;
-
-        if(indexEstado != 4  && indexAmbito != 1 && indexTipoAdministrativo != 2 ){
-            System.out.println("Estado: " + indexEstado + " Ambito: " + indexAmbito + " Tipo Administrativo: " + indexTipoAdministrativo);
-            driver.findElement(By.cssSelector("#frmCrearServicio\\:btnEspecialidad")).click();
-
-            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-            String query = "SELECT codigo  FROM ma_especialidades WHERE activo = \"1\" ORDER BY  RAND() LIMIT 1 \n";
-            String codigo = "";
-
-            try {
-                java.sql.Statement st = conexion.createStatement();
-                java.sql.ResultSet resultSet = st.executeQuery(query);
-                while (resultSet.next()) {
-                    codigo = resultSet.getString("codigo");
-                }
-            } catch (Exception e) {
-                System.out.println("Error al consultar la base de datos: " + e.getMessage());
-            }
-
-            driver.findElement(By.cssSelector("#frmEspecialidadBusqueda\\:tablaRegistrosEspecialidades\\:j_idt2469")).sendKeys(codigo);
-
-            driver.findElement(By.cssSelector("#frmEspecialidadBusqueda\\:j_idt2466")).click();
-
-            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-            driver.findElement(By.cssSelector("#frmEspecialidadBusqueda\\:tablaRegistrosEspecialidades_data > tr:nth-child(1)")).click();
-
-            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-            driver.findElement(By.cssSelector("#frmCrearServicio\\:btnCiex")).click();
-
-            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-            query = "SELECT codigo  FROM ma_diagnosticos md WHERE activo = \"1\" ORDER BY RAND() LIMIT 1 \n";
-            String codigoDiagnostico = "";
-
-            try {
-                java.sql.Statement st = conexion.createStatement();
-                java.sql.ResultSet resultSet = st.executeQuery(query);
-                while (resultSet.next()) {
-                    codigoDiagnostico = resultSet.getString("codigo");
-                }
-            } catch (Exception e) {
-                System.out.println("Error al consultar la base de datos: " + e.getMessage());
-            }
-
-            driver.findElement(By.cssSelector("#frmDiagnosticoBusqueda\\:tablaRegistrosDiagnoticos\\:j_idt2456")).sendKeys(codigoDiagnostico);
-
-            driver.findElement(By.cssSelector("#frmDiagnosticoBusqueda\\:j_idt2447")).click();
-
-            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-            driver.findElement(By.cssSelector("#frmDiagnosticoBusqueda\\:tablaRegistrosDiagnoticos_data > tr:nth-child(1)")).click();
-
-            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-            driver.findElement(By.cssSelector("#frmCrearServicio\\:patologiaCrear")).click();
-            esperar(200);
-
-            List<WebElement> patologias = driver.findElements(By.cssSelector("#frmCrearServicio\\:patologiaCrear_items li"));
-
-            indexPatologia = (int) (Math.random() * patologias.size());
-
-            if (indexPatologia == 0) {
-                indexPatologia = 1;
-            }
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", patologias.get(indexPatologia));
-            patologias.get(indexPatologia).click();
-
-        }
-
-        LocalDate fechaCumplimiento = LocalDate.now();
-        int dia = (int) (Math.random() * 30) + 1;
-        fechaCumplimiento = fechaCumplimiento.plusDays(dia);
-
-        System.out.println("Fecha de cumplimiento: " + fechaCumplimiento);
-
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:fechacumplimientoCrear_input")).click();
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:fechacumplimientoCrear_input")).sendKeys(String.valueOf(fechaCumplimiento));
-
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:descripcionCrear")).click();
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:descripcionCrear")).sendKeys("Servicio editado con automatización");
-
-
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:servicioAtribuidoIPS")).click();
-        esperar(200);
-
-        List<WebElement> servicios = driver.findElements(By.cssSelector("#frmCrearServicio\\:servicioAtribuidoIPS_items li"));
-
-        int indexServicio = (int) (Math.random() * servicios.size());
-
-        if (indexServicio == 0) {
-            indexServicio = 1;
-        }
-
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", servicios.get(indexServicio));
-        servicios.get(indexServicio).click();
-
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:btnservicioDestino")).click();
-
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-        List<WebElement> serviciosDestino = driver.findElements(By.cssSelector("#frmPrestadorIpsDestino\\:tablaRegistrosIpsDestino_data > tr"));
-
-        int indexServicioDestino = (int) (Math.random() * serviciosDestino.size());
-
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", serviciosDestino.get(indexServicioDestino));
-
-        serviciosDestino.get(indexServicioDestino).click();
-
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-        String sede = driver.findElement(By.cssSelector("#frmCrearServicio\\:sedeServicioDestino > span")).getText();
-
-        System.out.println("Sede: " + sede);
-
-        // Creamos una lista con las sedes que necesitan asignación
-        List<String> sedesAsignadas = List.of("HOSPITAL INTERNACIONAL DE COLOMBIA","LABORATORIO CLINICO CENTRAL DE REFERENCIA Avda 33","UNLAB - SOMA","CLINICA POLOSALUD IPS", "ASESORIAS Y SUMINISTROS ESPECIALIZADOS CONSULTING SAS", "ADILAB CALDAS","ARCAL PROTECCION RADIOLOGICA IPS APARTADO","UNION TEMPORAL SOMEDITEC MG");
-        if (sedesAsignadas.contains(sede)) {
-            driver.findElement(By.cssSelector("#frmCrearServicio\\:asignado")).click();
-            esperar(200);
-            List<WebElement> asignados = driver.findElements(By.cssSelector("#frmCrearServicio\\:asignado_items li"));
-            int indexAsignado = (int) (Math.random() * asignados.size());
-
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", asignados.get(indexAsignado));
-            asignados.get(indexAsignado).click();
-        }
-
-
-        LocalDate fechaInicioVigencia = LocalDate.now();
-
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:fechaInicioVigenciaCrear_input")).click();
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:fechaInicioVigenciaCrear_input")).sendKeys(String.valueOf(fechaInicioVigencia));
-
-        LocalDate fechaFinVigencia = fechaInicioVigencia.plusDays(30);
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:fechaFinVigenciaCrear_input")).click();
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:fechaFinVigenciaCrear_input")).sendKeys(String.valueOf(fechaFinVigencia));
-
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmCrearServicio\\:pCrearServicioTecnologias_header")));
-        agregarAdjuntoServicios();
-
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:j_idt1212")).click();
-
-    }
-
-    private void agregarAdjuntoServicios(){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-        File uploadFile = new File("C:\\Users\\apuertav\\Downloads\\Contratacion_Prestadores_2-1_20230405140945909.pdf");
-
-        //Nos movemos hasta el botón de adjuntar archivo
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmCrearServicio\\:tablaAnexosServicios\\:anexo4_input")));
-
-        WebElement adjunto = driver.findElement(By.cssSelector("#frmCrearServicio\\:tablaAnexosServicios\\:anexo4_input"));
-
-        adjunto.sendKeys(uploadFile.getAbsolutePath());
-
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-        driver.findElement(By.cssSelector("#frmCrearServicio\\:tablaAnexosServicios\\:anexo4 > div.ui-fileupload-buttonbar.ui-widget-header.ui-corner-top > button.ui-fileupload-upload.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-icon-left")).click();
-    }
-
-    private void seguimiento(){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        driver.findElement(By.cssSelector("#frmEditar\\:estadoSeguimiento")).click();
-
-        List<WebElement> estadosSeguimiento = driver.findElements(By.cssSelector("#frmEditar\\:estadoSeguimiento_items li"));
-
-        int indexEstadoSeguimiento = (int) (Math.random() * estadosSeguimiento.size());
-
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", estadosSeguimiento.get(indexEstadoSeguimiento));
-        estadosSeguimiento.get(indexEstadoSeguimiento).click();
-
-        driver.findElement(By.cssSelector("#frmEditar\\:observacionSeg")).sendKeys("Seguimiento editado con automatización");
-
-        agregarAdjuntoSeguimiento();
-
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-    }
-
-    private void agregarAdjuntoSeguimiento(){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-        File uploadFile = new File("C:\\Users\\apuertav\\Downloads\\Contratacion_Prestadores_2-1_20230405140945909.pdf");
-
-        //Nos movemos hasta el botón de adjuntar archivo
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.cssSelector("#frmEditar\\:tablaAnexosSeguimiento\\:inptAnexo_input")));
-        WebElement adjunto = driver.findElement(By.cssSelector("#frmEditar\\:tablaAnexosSeguimiento\\:inptAnexo_input"));
-
-        adjunto.sendKeys(uploadFile.getAbsolutePath());
-
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
-
-        driver.findElement(By.cssSelector("#frmEditar\\:tablaAnexosSeguimiento\\:inptAnexo > div.ui-fileupload-buttonbar.ui-widget-header.ui-corner-top > button.ui-fileupload-upload.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-icon-left")).click();
-
-
-    }
 }
