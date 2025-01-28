@@ -324,4 +324,80 @@ public class listarCasos {
         driver.findElement(By.id("frmCasos:tablaRegistros:j_idt116")).click();
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
     }
+
+    @Test
+    public  void opcionesFuncionales() {
+        ingreso.iniciarSesion();
+        esperar(2000);
+        driver.get("http://10.250.3.66:8080/savia/atencionusuario/casos.faces");
+        verDetalle();
+        esperar(200);
+        historialServicios();
+        esperar(200);
+        cerrarCaso();
+
+    }
+
+    private void verDetalle(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        driver.findElement(By.cssSelector("#frmCasos\\:tablaRegistros\\:0\\:j_idt61")).click();
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        esperar(2000);
+
+        driver.get("http://10.250.3.66:8080/savia/atencionusuario/casos.faces");
+    }
+
+    private void historialServicios(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        driver.findElement(By.cssSelector("#frmCasos\\:tablaRegistros\\:0\\:j_idt65")).click();
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        esperar(2000);
+
+        driver.get("http://10.250.3.66:8080/savia/atencionusuario/casos.faces");
+    }
+
+    private void cerrarCaso(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        driver.findElement(By.cssSelector("#frmCasos\\:tablaRegistros\\:j_idt99")).click();
+        esperar(500);
+
+        driver.findElement(By.cssSelector("#frmCasos\\:tablaRegistros\\:j_idt99_panel > div.ui-selectcheckboxmenu-items-wrapper > ul > li:nth-child(7)")).click();
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        driver.findElement(By.cssSelector("#frmCasos\\:tablaRegistros\\:0\\:j_idt67")).click();
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+
+        driver.findElement(By.cssSelector("#frmCerrarCaso\\:motivoCerrarCaso")).click();
+
+        List<WebElement> motivos = driver.findElements(By.cssSelector("#frmCerrarCaso\\:motivoCerrarCaso_items > li"));
+
+        int indexMotivo = (int) (Math.random() * motivos.size());
+
+        if (indexMotivo == 0) {
+            indexMotivo = 1;
+        }
+
+        motivos.get(indexMotivo).click();
+
+        driver.findElement(By.cssSelector("#frmCerrarCaso\\:comentarioCerrarCaso")).sendKeys("Caso cerrado por pruebas automatizadas");
+
+        driver.findElement(By.cssSelector("#frmCerrarCaso\\:j_idt2432")).click();
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("overlay")));
+    }
 }
