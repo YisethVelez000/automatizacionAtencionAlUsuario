@@ -149,7 +149,25 @@ public class crearPersonas {
 
         driver.findElement(By.cssSelector("#frmCrear\\:email")).sendKeys(correo);
 
+        driver.findElement(By.cssSelector("#frmCrear\\:estado")).click();
+        esperar(200);
+
+        List<WebElement> estados = driver.findElements(By.cssSelector("#frmCrear\\:estado_items > li"));
+
+        int indexEstado = (int) (Math.random() * estados.size());
+
+        if (indexEstado == 0) {
+            indexEstado++;
+        }
+
+        estados.get(indexEstado).click();
+
+        driver.findElement(By.cssSelector("#frmCrear\\:ubicacion")).click();
+        esperar(200);
+
+        List<WebElement> ubicaciones = driver.findElements(By.cssSelector("#frmCrear\\:ubicacion_items > li"));
     }
+
 
     public static String generarCorreo(String nombres, String apellidos) {
         // Obtener la primera letra del nombre
@@ -159,6 +177,11 @@ public class crearPersonas {
         // Convertir el apellido a minúsculas y eliminar espacios y dejar solo un apellido
         String apellidoFormateado = apellidos.toLowerCase().replaceAll("\\s+", "");
 
+
+        //Tomar solo los primeros 6 caracteres del apellido
+        if (apellidoFormateado.length() > 5) {
+            apellidoFormateado = apellidoFormateado.substring(0, 5);
+        }
 
         // Combinar la inicial del nombre con el apellido y agregar un dominio
         String correo = inicialNombre + apellidoFormateado + "@gmail.com";
